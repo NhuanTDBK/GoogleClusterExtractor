@@ -12,12 +12,13 @@ import numpy as np
 conf = (SparkConf()
          .setMaster("local")
          .setAppName("CPU Resource")
-         .set("spark.executor.memory", "1g"))
-sc = SparkContext(conf = conf)
+         .set("spark.executor.memory", "4g")
+	 .set("spark.driver.maxResultSize","2g"))
+sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
-schema = pd.read_csv("/home/nhuanhunter/MyWorking/SparkInvestor/data/schema_tu.csv")
-dat = pd.read_csv('/home/nhuanhunter/MyWorking/SparkInvestor/data/par0.csv',names=schema.columns)
+schema = pd.read_csv("schema_tu.csv")
+dat = pd.read_csv('/home/ubuntu/google_cluster_data/task_usage/task_usage/part-00499-of-00500.csv',names=schema.columns)
 sample_data = dat
 del dat
 del schema
@@ -25,7 +26,7 @@ sample_rdd = sqlContext.createDataFrame(sample_data)
 del sample_data
 
 sample_rdd.registerTempTable("metrics")
-cpu_val = sqlContext.sql("SELECT stime,etime,mID,CPU_rate from metrics limit 10")
+cpu_val = sqlContext.sql("SELECT stime,etime,mID,CPU_rate from metrics limit 300")
 
 def map_moments(T):
     stime = T[0]
@@ -40,10 +41,13 @@ mapper = cpu_val.flatMap(map_moments).reduceByKey(reduce_moments).map(flatMap_mo
 # <codecell>
 
 t = mapper.collect()
-
+#mapper.saveAsSequenceFile('machine_usage_seq')
 # <codecell>
+#txtFile = pd.DataFrame(t,columns=["MID","Moment","CPU"])
+#print txtFile.shape
+#txtFile.to_csv('/home/ubuntu/machine_usage.csv',index=False)
+# <codecell>
+#mapper.saveAsTextFile('machine_usage_seq')
 txtFile = pd.DataFrame(t,columns=["MID","Moment","CPU"])
-txtFile.to_csv('machine_usage')
-# <codecell>
-
+txtFile.to_csv('/home/ubuntu/machine_usage.csv',index=False)
 
