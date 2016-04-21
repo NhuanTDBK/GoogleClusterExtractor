@@ -9,13 +9,17 @@ sqlContext = SQLContext(sc)
 data_path ='/home/ubuntu/google_cluster_data/task_usage/task_usage/'
 schema_path = 'schema_tu.csv'
 schema = pd.read_csv(schema_path)
-for file in os.listdir(data_path):
-	dat = pd.read_csv(data_path,names=schema.columns)
-	sample_dat = dat[["mID"]]       
-	sample_rdd = sqlContext.createDataFrame(sample_dat)
-	sample_rdd.registerTempTable("metrics")
-	cpu_val = sqlContext.sql("SELECT mID,COUNT(*) as cnt FROM metrics GROUP BY mID ORDER BY cnt DESC LIMIT 10").collect()
-	df = pd.DataFrame(cpu_val,columns=['mID','counts']).to_csv('count%s'%file)
+for file_name in os.listdir(data_path):
+	dataMIDG = pd.DataFrame(sc.textFile('%s%s'%(data_path,file_name)).map(lambda x: x.split(',')).map(lambda x: (x[4],1))
+			.groupByKey().mapValues(len)
+			.sortBy(lambda x:x[1],False).take(10))
+	dataMIDG.to_csv('summary/count%s'%file_name,header=None,index=False)	
+files  = sc.textFile('summary/*')
+dat = files.map(lambda x: x.split(',')).collect()
+dat = pd.DataFrame(dat,columns=['mID','counts'])
+t = dat.sort(['counts'],ascending=False)
+print t.iloc[:10]
+t.to_csv('top10.csv',index=False)
 sc.stop()
 
 	
