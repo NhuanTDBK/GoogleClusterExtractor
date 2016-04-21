@@ -1,0 +1,10 @@
+import pandas as pd
+
+file_name
+dataMIDG = pd.DataFrame(sc.textFile('%s%s'%(data_path,file_name)).map(lambda x: x.split(',')).map(lambda x: (x[4],1)).groupByKey().mapValues(len).sortBy(lambda x:x[1],False).take(10))
+dataMIDG.to_csv('count%s'%file_name)
+
+files  = sc.textFile('summary/*')
+dat = files.map(lambda x: x.split(',')).collect()
+dat = pd.DataFrame(dat,columns=['mID','counts'])
+dat.sort(['counts'],ascending=False).iloc[:3]
