@@ -17,9 +17,9 @@ schema_path = 'schema_tu.csv'
 
 # data_path = '/home/ubuntu/google_cluster_data/task_usage/task_usage/part-00499-of-00500.csv'
 schema = pd.read_csv(schema_path)
-topMID = pd.read_csv('top10MID.csv',header=None)
-topFile = pd.read_csv('topFile.csv',header=None)
-for file_name in topFile:
+topMID = pd.read_csv('top10MID.csv',header=None,names=["mID"])
+topFile = pd.read_csv('topFile.csv',header=None,names=["file"])
+for file_name in topFile.file:
     dat = pd.read_csv("%s%s"%(folder_path,file_name),names=schema.columns)
     sample_dat = dat[["stime","etime","CPU_rate","mID"]]
     sample_dat = sample_dat[sample_dat.mID.isin(topMID.mID)]
@@ -28,6 +28,6 @@ for file_name in topFile:
     cpu_val = sqlContext.sql("SELECT * from metrics")
     mapper = cpu_val.flatMap(flatMap_moments).reduceByKey(reduce_moments).map(map_sorted).sortByKey(True,4).map(map_moments).collect()
     df = pd.DataFrame(mapper,columns=['mID','moment','CPU'])
-    df.to_csv('mapperr_%s'%file_name,index=False)
+    df.to_csv('data/mapperr_%s'%file_name,index=False)
 sc.stop()
 
