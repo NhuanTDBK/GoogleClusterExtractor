@@ -28,6 +28,6 @@ for file_name in topFile.file:
     cpu_val = sqlContext.sql("SELECT * from metrics")
     mapper = cpu_val.flatMap(flatMap_moments).reduceByKey(reduce_moments).map(map_moments).collect()
     df = pd.DataFrame(mapper,columns=schema_df)
-    df.to_csv('data/mapperr_%s'%file_name,index=False)
+    df.to_csv('data/mapperr_%s'%file_name,index=False,header=None)
 sc.stop()
 
