@@ -9,10 +9,10 @@ import pandas as pd
 import numpy as np
 import os
 
-folder_path ='dataset/original/'
+folder_path ='/home/ubuntu/data/google_cluster/task_usage'
 schema_path = 'schema_tu.csv'
 # schema_df = ["mID","moment","cpu_rate","mem_usage","disk_io_time","disk_space"]
-data_path = 'dataset/part-00232-of-00500.csv.gz'
+#data_path = 'dataset/part-00232-of-00500.csv.gz'
 
 # <codecell>
 
@@ -31,5 +31,5 @@ for file_path in os.listdir(folder_path):
 print "Get top job ID by run-time"
 df = pd.DataFrame(total_size,columns=["jID","length","file"])
 s = df.groupby('jID').sum()
-s.nlargest(10,'length').to_csv('top_jobID')
+s.nlargest(10,'length').to_csv('topJID.csv')
 
