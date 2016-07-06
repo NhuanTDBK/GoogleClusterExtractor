@@ -21,7 +21,7 @@ topMID = pd.read_csv('top10MID.csv',header=None,names=["mID"])
 topFile = pd.read_csv('topFile.csv',header=None,names=["file"])
 for file_name in topFile.file:
     dat = pd.read_csv("%s%s"%(folder_path,file_name),names=schema.columns)
-    sample_dat = dat[["stime","etime","CPU_rate","canonical_mem","disk_IO","disk_usage","mID"]]
+    sample_dat = dat[["stime","etime","CPU_rate","canonical_mem","disk_IO","disk_usage","tID"]]
     sample_dat = sample_dat[sample_dat.mID.isin(topMID.mID)]
     sample_rdd = sqlContext.createDataFrame(sample_dat)
     sample_rdd.registerTempTable("metrics")

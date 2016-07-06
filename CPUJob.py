@@ -25,6 +25,7 @@ for file_name in os.listdir(folder_path):
     sample_dat = sample_dat[sample_dat.jID.isin(topJID.jID)]
     if(sample_dat.empty):
 	continue
+    sample_dat = dat[["stime","etime","CPU_rate","canonical_mem","disk_IO","disk_usage","tID"]]
     sample_rdd = sqlContext.createDataFrame(sample_dat)
     sample_rdd.registerTempTable("metrics")
     cpu_val = sqlContext.sql("SELECT * from metrics")
