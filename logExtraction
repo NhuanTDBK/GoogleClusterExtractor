@@ -230,7 +230,8 @@ Reading part-00091-of-00500.csv.gz
 Reading part-00263-of-00500.csv.gz
 Reading part-00057-of-00500.csv.gz
 Reading part-00089-of-00500.csv.gz
-Reading part-00328sys:1: DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low_memory=False.
+Reading part-00328/usr/lib/python2.7/dist-packages/IPython/core/shellapp.py:339: DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low_memory=False.
+  self.shell.user_ns)
 -of-00500.csv.gz
 Reading part-00474-of-00500.csv.gz
 Reading part-00086-of-00500.csv.gz

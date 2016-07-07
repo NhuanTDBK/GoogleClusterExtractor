@@ -14,5 +14,5 @@ for file_name in os.listdir(folder_path):
 	sample_dat = dat[dat.job_ID==jobID]
 	if sample_dat.shape[0] != 0:
 		print "Reading %s"%file_name
-		results.append(sample_dat)
-results = pd.DataFrame(results).to_csv('result_%s'%jobID)
+		sample_dat.to_csv('dataset/dat_%s'%file_name,index=None,header=None)
+#results = pd.DataFrame(results).to_csv('result_%s'%jobID)
